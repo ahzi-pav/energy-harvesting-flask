@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RF Energy Harvesting Model</title>
+	<link class="stylesheet" href="styles/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>RF Energy Harvested Prediction</h1>
+	
+    <form id="predict-form" class="form">
+        <label for="Frequency">Frequency:</label>
+        <input type="text" id="Frequency" name="Frequency"><br><br>
+
+        <label for="SignalStrength">Signal Strength:</label>
+        <input type="text" id="SignalStrength" name="SignalStrength"><br><br>
+
+        <label for="Bandwidth">Bandwidth:</label>
+        <input type="text" id="Bandwidth" name="Bandwidth"><br><br>
+
+        <label for="BatteryLevel">Battery Level:</label>
+        <input type="text" id="BatteryLevel" name="BatteryLevel"><br><br>
+
+        <label for="AntennaType">Antenna Type:</label>
+        <select id="AntennaType" name="AntennaType">
+            <option value="Yagi">Yagi</option>
+            <option value="Dipole">Dipole</option>
+            <option value="Omnidirectional">Omnidirectional</option>
+            <option value="Directional">Directional</option>
+        </select><br><br>
+
+        <label for="InterferenceType">Interference Type:</label>
+        <select id="InterferenceType" name="InterferenceType">
+            <option value="Co-channel">Co-channel</option>
+            <option value="Intermodulation">Intermodulation</option>
+            <option value="Adjacent-channel">Adjacent-channel</option>
+        </select><br><br>
+
+        <label for="DeviceType">Device Type:</label>
+        <select id="DeviceType" name="DeviceType">
+            <option value="HackRF">HackRF</option>
+            <option value="Halow-U">Halow-U</option>
+            <option value="SteamDeck">SteamDeck</option>
+        </select><br><br>
+
+        <label for="PowerSource">Power Source:</label>
+        <select id="PowerSource" name="PowerSource">
+            <option value="True">True</option>
+            <option value="False">False</option>
+        </select><br><br>
+
+        <input type="submit" value="Predict">
+    </form>
+
+    <h2>Prediction: <span id="prediction"></span></h2>
+
+    <script>
+        $(document).ready(function(){
+            $('#predict-form').on('submit', function(e){
+                e.preventDefault();
+                $.ajax({
+                    url: 'http://127.0.0.1:5000/predict',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        'Frequency': $('#Frequency').val(),
+                        'Signal Strength': $('#SignalStrength').val(),
+                        'Bandwidth': $('#Bandwidth').val(),
+                        'Battery Level': $('#BatteryLevel').val(),
+                        'Antenna Type': $('#AntennaType').val(),
+                        'Interference Type': $('#InterferenceType').val(),
+                        'Device Type': $('#DeviceType').val(),
+                        'Power Source': $('#PowerSource').val()
+                    }),
+                    success: function(data){
+						console.log(data);
+                        $('#prediction').text(data.prediction);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
